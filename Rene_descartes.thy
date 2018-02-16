@@ -1,8 +1,10 @@
-section {* Introduction *}
+
 
 theory Rene_Descartes
   imports Main
 begin
+
+section {*introduction *}
 
 text{* This paper presents an automated verification of Rene Descartes's argument on @{ Text "my_mind_and_body_are_distinct"}.
 here, I'm providing the whole argument to make it easy to the user who read this verification. *}
@@ -28,7 +30,7 @@ consts body :: "e" --"constant symbol for a physical thing"
 prop "divisible(e) ⟶ can_be_divided_into_parts(e)"--"if a physical thing  can_be_divided_into_parts implies it is divisible"
 consts A ::"e"
 consts B ::"e"
-fun distinct :: "divisible(A)::bool \<Rightarrow> divisible(B)::bool ⇒ bool" where
+fun distinct :: "bool \<Rightarrow> bool \<rightarrow> bool" where
 "distinct True True = True" |
 "distinct _ _ = False"
 consts mind :: "e"
