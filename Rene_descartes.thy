@@ -23,7 +23,7 @@ typedecl e -- "type of physically existing things"
 text ‹If it can be divided into parts it is divisible›
 
 consts breakable :: "e \<Rightarrow> bool"
-consts body :: "e" ("body") --"constant symbol for a physical thing"
+consts body :: "e" ("body") 
 consts mind :: "e" ("mind")
 
 prop "breakable(body)" --"body can be divided into parts"
