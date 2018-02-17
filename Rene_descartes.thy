@@ -22,15 +22,15 @@ teach me that my mind and my body are distinct. *}
 typedecl e -- "type of physically existing things"
 text ‹If it can be divided into parts it is divisible›
 
-consts can_be_divided_into_parts :: "e \<Rightarrow> bool"
+consts breakable :: "e \<Rightarrow> bool"
 consts body :: "e" ("body") --"constant symbol for a physical thing"
 consts mind :: "e" ("mind")
 
-prop "can_be_divided_into_parts(body)" --"body can be divided into parts"
-prop "\<not>can_be_divided_into_parts(mind)" --"mind can not be divided into parts"
+prop "breakable(body)" --"body can be divided into parts"
+prop "\<not> breakable(mind)" --"mind can not be divided into parts"
 
   
 function distinct::"e \<Rightarrow> e \<Rightarrow> bool" where
-"distinct x y =(if can_be_divided_into_parts(x)\<and> \<not> can_be_divided_into_parts(y) = False then False else True)"
+"distinct x y =(if breakable(x)\<and> \<not> breakable(y) = False then False else True)"
    apply(auto)
 end
