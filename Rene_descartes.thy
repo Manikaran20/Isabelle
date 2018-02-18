@@ -9,7 +9,7 @@ here, I'm providing the whole argument to make it easy to the user who read this
 
 section {* The_Argument *}
 
-text{* I will note that mind differs importantly from body in that body is by it's nature divisible,
+text{*  @ { cite "https://www.youtube.com/watch?v=Din_92eKqW8&t=1457s" I will note that mind differs importantly from body in that body is by it's nature divisible,
  while mind is indivisible when I think about my mind or in other words Myself in so far,
 I am just a thinking being .I can't distinguish any parts.I understand myself to be a whole 
 unified thing although my whole mind seems united to my whole body.I know cutting off a foot or an
