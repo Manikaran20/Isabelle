@@ -35,3 +35,4 @@ function distinct::"e \<Rightarrow> e \<Rightarrow> bool" where
    apply(auto)
    done
 end
+ 
