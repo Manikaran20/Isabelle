@@ -33,4 +33,5 @@ prop "\<not> breakable(mind)" --"mind can not be divided into parts"
 function distinct::"e \<Rightarrow> e \<Rightarrow> bool" where
 "distinct x y =(if breakable(x)\<and> \<not> breakable(y) = False then False else True)"
    apply(auto)
+   done
 end
