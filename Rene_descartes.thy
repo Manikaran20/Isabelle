@@ -1,3 +1,4 @@
+
 theory Rene_Descartes
   imports Main
 begin
@@ -22,29 +23,31 @@ teach me that my mind and my body are distinct. *}
 typedecl e -- "type of physically existing things"
 text ‹If it can be divided into parts it is divisible›
 
-consts breakable ::"e ⇒ bool"
+consts can_be_divided_into_parts ::"e ⇒ bool"
 consts body :: "e" ("body") --"constant symbol for a physical thing"
 consts mind :: "e" ("mind") 
 
-prop "breakable(body)" --"body can be divided into parts"
-prop "\<not>breakable(mind)  " --"mind can not be divided into parts"
+prop "can_be_divided_into_parts(body)" --"body can be divided into parts"
+prop "\<not>can_be_divided_into_parts(mind)  " --"mind can not be divided into parts"
 consts P:: "e \<Rightarrow> bool" --"some property for type e"
 
-axiomatization where mind_constrain : "breakable(mind)⟹False"
+axiomatization where mind_constrain : "can_be_divided_into_parts(mind)⟹False"
 
-axiomatization where body_constrain: "breakable(body) ⟹True"
+axiomatization where body_constrain: "can_be_divided_into_parts(body) ⟹True"
 
 type_synonym σ = "e\<Rightarrow>bool"
 
-abbreviation leib_eq :: "e \<Rightarrow> e \<Rightarrow> σ " (infix "L=" 90) where
+abbreviation leib_eq :: "e\<Rightarrow>e\<Rightarrow>bool" ("L=") where
+"L= x y \<equiv> \<forall>(λφ::e.(φx \<longrightarrow> φy))" 
 
-"L= x y \<equiv> \<forall> ( λφ. (φx \<longrightarrow> φy))" 
+abbreviation leibniz_equality_syntax:: " e\<Rightarrow>e\<Rightarrow>bool" (infix "L=" 90) where
+"x L= y \<equiv> L= x y"
   
 definition  distinct::"e ⇒ e ⇒ bool" where
 "distinct x y iff \<not> L= x y "
 
 
 theorem MyBodyAndMyMind_are_distinct : 
-  assumes 
+  assumes  
   
 end-
