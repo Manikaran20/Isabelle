@@ -44,7 +44,7 @@ abbreviation leibniz_equality_syntax:: " e\<Rightarrow>e\<Rightarrow>bool" (infi
 "x L= y \<equiv> L= x y"
   
 definition  distinct::"e ⇒ e ⇒ bool" where
-"distinct x y iff \<not> L= x y "
+"distinct x y iff \<not> (x L= y) "
 
 
 theorem MyBodyAndMyMind_are_distinct : 
