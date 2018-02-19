@@ -43,11 +43,12 @@ abbreviation leibniz_equality :: "e\<Rightarrow>e\<Rightarrow>bool" ("L=") where
 abbreviation leibniz_equality_syntax:: " e\<Rightarrow>e\<Rightarrow>bool" (infix "L=" 90) where
 "x L= y \<equiv> L= x y"
   
-definition  distinct::"e ⇒ e ⇒ bool" where
-"distinct x y iff \<not> (x L= y) "
+function  distinct::"e ⇒ e ⇒ bool" where
+"iff (distinct x y) (\<not> (x L= y)) "
 
 
 theorem MyBodyAndMyMind_are_distinct : 
+
   assumes  
   
 end-
