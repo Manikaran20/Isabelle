@@ -35,7 +35,6 @@ axiomatization where mind_constrain : "can_be_divided_into_parts(mind)⟹False"
 
 axiomatization where body_constrain: "can_be_divided_into_parts(body) ⟹True"
 
-type_synonym σ = "e\<Rightarrow>bool"
 
 abbreviation leibniz_equality :: "e\<Rightarrow>e\<Rightarrow>bool" ("L=") where
 "L= x y \<equiv> \<forall>(λφ::e.(φx \<longrightarrow> φy))" 
