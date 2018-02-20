@@ -33,9 +33,9 @@ prop "¬breakable(mind)  " --"mind can not be divided into parts"
 
 consts P:: "e ⇒ bool" --"some property for type e"
 type_synonym \<sigma> = " e\<Rightarrow>bool"
-axiomatization where mind_constrain : "breakable(mind)⟹False"
+axiomatization where mind_constrain : "breakable(mind)=False"
 
-axiomatization where body_constrain: "breakable(body) ⟹True"
+axiomatization where body_constrain: "breakable(body) = True"
 
 abbreviation implies :: "\<sigma> \<Rightarrow> \<sigma> \<Rightarrow> \<sigma>" (infixr "\<^bold>\<rightarrow>" 49)where
  "\<phi> \<^bold>\<rightarrow> \<psi> \<equiv> (\<lambda>w. \<phi> w \<longrightarrow> \<psi> w)" 
