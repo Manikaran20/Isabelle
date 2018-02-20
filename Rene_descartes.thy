@@ -29,23 +29,27 @@ consts mind :: "e" ("mind")
 
 prop "breakable(body)" --"body can be divided into parts"
 
-prop "\<not>breakable(mind)  " --"mind can not be divided into parts"
+prop "¬breakable(mind)  " --"mind can not be divided into parts"
 
-consts P:: "e \<Rightarrow> bool" --"some property for type e"
-
+consts P:: "e ⇒ bool" --"some property for type e"
+type_synonym \<sigma> = " e\<Rightarrow>bool"
 axiomatization where mind_constrain : "breakable(mind)⟹False"
 
 axiomatization where body_constrain: "breakable(body) ⟹True"
 
-abbreviation leibniz_equality :: "e\<Rightarrow>e\<Rightarrow>bool" ("L=") where
-"L= x y \<equiv> \<forall>(λφ.(φx \<longrightarrow> φy))"
+abbreviation implies :: "\<sigma> \<Rightarrow> \<sigma> \<Rightarrow> \<sigma>" (infixr "\<^bold>\<rightarrow>" 49)where
+ "\<phi> \<^bold>\<rightarrow> \<psi> \<equiv> (\<lambda>w. \<phi> w \<longrightarrow> \<psi> w)" 
+abbreviation forall :: "('a \<Rightarrow> \<sigma>) \<Rightarrow> \<sigma>" ("\<^bold>\<forall>") where 
+ "\<^bold>\<forall> \<Phi> \<equiv> (\<lambda>w. \<forall>x. \<Phi> x w)"
 
+abbreviation Leibniz_equality :: "e\<Rightarrow>e\<Rightarrow> \<sigma>" (infixr "L=" 52) where
+ "x L= y \<equiv> \<^bold>\<forall>(\<lambda>\<phi>. (\<phi> x \<^bold>\<rightarrow> \<phi> y))"
 
-abbreviation leibniz_equality_syntax:: " e\<Rightarrow>e\<Rightarrow>bool" (infix "Lb=" 90) where
-"x Lb= y \<equiv>  L= x y"
+abbreviation not :: "\<sigma> \<Rightarrow>\<sigma>" ("\<^bold>\<not>") where
+ "\<^bold>\<not> \<phi> \<equiv> (\<lambda>w. \<not> \<phi> w)"
   
-function  distinct::"e ⇒ e ⇒ bool" where
-"iff (distinct x y = True) (\<not>(x Lb= y)=True)" 
+function  distinct::"e ⇒ e ⇒bool" where
+"distinct x y = ( if \<^bold>\<not>(x L= y) then True else False)" 
 
 theorem MyBodyAndMyMind_are_distinct : 
   shows "(distinct mind body) = True"
