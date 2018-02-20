@@ -33,28 +33,26 @@ prop "¬breakable(mind)  " --"mind can not be divided into parts"
 
 consts P:: "e ⇒ bool" --"some property for type e"
 type_synonym \<sigma> = " e\<Rightarrow>bool"
-axiomatization where mind_constrain : "breakable(mind)=False"
+axiomatization where mind_constrain : "breakable(mind)⟹False"
 
-axiomatization where body_constrain: "breakable(body) = True"
+axiomatization where body_constrain: "breakable(body) ⟹True"
 
 abbreviation implies :: "\<sigma> \<Rightarrow> \<sigma> \<Rightarrow> \<sigma>" (infixr "\<^bold>\<rightarrow>" 49)where
  "\<phi> \<^bold>\<rightarrow> \<psi> \<equiv> (\<lambda>w. \<phi> w \<longrightarrow> \<psi> w)" 
- 
 abbreviation forall :: "('a \<Rightarrow> \<sigma>) \<Rightarrow> \<sigma>" ("\<^bold>\<forall>") where 
  "\<^bold>\<forall> \<Phi> \<equiv> (\<lambda>w. \<forall>x. \<Phi> x w)"
 
 abbreviation Leibniz_equality :: "e\<Rightarrow>e\<Rightarrow> \<sigma>" (infixr "L=" 52) where
  "x L= y \<equiv> \<^bold>\<forall>(\<lambda>\<phi>. (\<phi> x \<^bold>\<rightarrow> \<phi> y))"
-
 abbreviation not :: "\<sigma> \<Rightarrow>\<sigma>" ("\<^bold>\<not>") where
  "\<^bold>\<not> \<phi> \<equiv> (\<lambda>w. \<not> \<phi> w)"
-  
-function  distinct::"e ⇒ e ⇒bool" where
-"distinct x y = ( if \<^bold>\<not>(x L= y) then True else False)" 
+
+abbreviation distinct :: "e\<Rightarrow>e\<Rightarrow>\<sigma>" where
+"distinct x y \<equiv> \<^bold>\<not>(x L= y)"
 
 theorem MyBodyAndMyMind_are_distinct : 
-  shows "(distinct mind body) = True"
-  with mind_constrain  have "breakable(mind) = False"  by blast
-  with body_constrain have " breakable(body) = True" by blast
+  shows "(distinct mind body) = \<^bold>\<not>(mind L= body)"
+  apply(auto)
 
-  end-
+
+end 
