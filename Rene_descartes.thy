@@ -1,3 +1,4 @@
+
 theory Rene_Descartes
   imports Main
 begin
@@ -9,7 +10,7 @@ here, I'm providing the whole argument to make it easy to the user who read this
 
 section {* The_Argument *}
 
-text{*@{ cite "https://www.youtube.com/watch?v=Din_92eKqW8&t=1457s"} I will note that mind differs importantly from body in that body is by it's nature divisible,
+text{*@{cite "https://www.youtube.com/watch?v=Din_92eKqW8&t=1457s"} I will note that mind differs importantly from body in that body is by it's nature divisible,
  while mind is indivisible when I think about my mind or in other words Myself in so far,
 I am just a thinking being .I can't distinguish any parts.I understand myself to be a whole 
 unified thing although my whole mind seems united to my whole body.I know cutting off a foot or an
@@ -22,7 +23,10 @@ teach me that my mind and my body are distinct. *}
 typedecl e -- "type of physically existing things"
 text ‹If it can be divided into parts it is divisible›
 
-consts breakable ::"e ⇒ bool"
+type_synonym \<sigma> = "e\<Rightarrow>bool"
+
+consts breakable ::"\<sigma>"
+
 consts body :: "e" ("body") --"constant symbol for a physical thing"
 consts mind :: "e" ("mind") 
 
@@ -31,11 +35,10 @@ prop "breakable(body)" --"body can be divided into parts"
 
 prop "¬breakable(mind)  " --"mind can not be divided into parts"
 
-consts P:: "e ⇒ bool" --"some property for type e"
-type_synonym \<sigma> = " e\<Rightarrow>bool"
-axiomatization where mind_constrain : "breakable(mind)⟹False"
 
-axiomatization where body_constrain: "breakable(body) ⟹True"
+axiomatization where mind_constrain : "breakable(mind) = False"
+
+axiomatization where body_constrain: "breakable(body) = True"
 
 abbreviation implies :: "\<sigma> \<Rightarrow> \<sigma> \<Rightarrow> \<sigma>" (infixr "\<^bold>\<rightarrow>" 49)where
  "\<phi> \<^bold>\<rightarrow> \<psi> \<equiv> (\<lambda>w. \<phi> w \<longrightarrow> \<psi> w)" 
@@ -47,12 +50,10 @@ abbreviation Leibniz_equality :: "e\<Rightarrow>e\<Rightarrow> \<sigma>" (infixr
 abbreviation not :: "\<sigma> \<Rightarrow>\<sigma>" ("\<^bold>\<not>") where
  "\<^bold>\<not> \<phi> \<equiv> (\<lambda>w. \<not> \<phi> w)"
 
-abbreviation distinct :: "e\<Rightarrow>e\<Rightarrow>\<sigma>" where
+definition distinct :: "e\<Rightarrow>e\<Rightarrow>\<sigma>" where
 "distinct x y \<equiv> \<^bold>\<not>(x L= y)"
 
-theorem MyBodyAndMyMind_are_distinct : 
-  shows "(distinct mind body) = \<^bold>\<not>(mind L= body)"
-  apply(auto)
-
-
+theorem MyBodyAndMyMind_are_distinct : "distinct mind body = \<^bold>\<not>(mind L= body)"
+  using mind_constrain body_constrain by blast
+  
 end 
