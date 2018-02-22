@@ -20,10 +20,6 @@ consts book :: "e"
 consts experiences :: "e\<Rightarrow>e\<Rightarrow>bool" (infix "experiences" 52)
 abbreviation mind ::"e\<Rightarrow>bool" where "mind x \<equiv> \<exists> y .(x experiences y)"
 abbreviation occured :: "e\<Rightarrow>bool" where " occured x \<equiv> \<exists> y .(x experiences y)\<and> \<not> nature y"
-axiomatization where books_claims_God : "\<exists>book .(occured book)" 
-
-axiomatization where experienced_God : "occured  book \<equiv> \<exists> y .(y=mind)"
-
-
-
- 
+abbreviation books_claims :: "e\<Rightarrow>bool" where "books_claims x \<equiv> occured x" 
+abbreviation existed :: "e\<Rightarrow>bool" where "existed x \<equiv> occured x "
+axiomatization where experienced_God : "books_claims God \<Longrightarrow> True"
