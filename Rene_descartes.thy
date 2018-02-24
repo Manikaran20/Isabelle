@@ -23,12 +23,12 @@ teach me that my mind and my body are distinct. *}
 typedecl e -- "type of physically existing things"
 text ‹If it can be divided into parts it is divisible›
 
-type_synonym \<sigma> = "e\<Rightarrow>bool"
+type_synonym σ = "e⇒bool"
 
-consts breakable ::"\<sigma>"
+consts breakable ::"σ"
 
-consts body :: "e" ("body") --"constant symbol for a physical thing"
-consts mind :: "e" ("mind") 
+consts body :: "e"  --"constant symbol for a physical thing"
+consts mind :: "e"  
 
 
 prop "breakable(body)" --"body can be divided into parts"
@@ -38,22 +38,22 @@ prop "¬breakable(mind)  " --"mind can not be divided into parts"
 
 axiomatization where mind_constrain : "breakable(mind) = False"
 
-axiomatization where body_constrain: "breakable(body) = True"
+axiomatization where body_constrain: "breakable(body) =True"
+abbreviation imp::"σ\<Rightarrow>σ\<Rightarrow>σ"(infix"⟶"49) where
+"(φ)⟶(ψ) ≡ λe. (φ e ⟶ ψ e)"
+abbreviation forall::"('a⇒σ)⇒σ" ("∀") where
+"∀Φ ≡ λe.∀x. (Φ x e)"
+abbreviation Leib_eql ::"e\<Rightarrow>e\<Rightarrow>bool"(infix"L="51) where
+"x L= y \<equiv>  ∀φ. (φ x)⟶(φ y)"
 
-abbreviation implies :: "\<sigma> \<Rightarrow> \<sigma> \<Rightarrow> \<sigma>" (infixr "\<^bold>\<rightarrow>" 49)where
- "\<phi> \<^bold>\<rightarrow> \<psi> \<equiv> (\<lambda>w. \<phi> w \<longrightarrow> \<psi> w)" 
-abbreviation forall :: "('a \<Rightarrow> \<sigma>) \<Rightarrow> \<sigma>" ("\<^bold>\<forall>") where 
- "\<^bold>\<forall> \<Phi> \<equiv> (\<lambda>w. \<forall>x. \<Phi> x w)"
+function distinct ::"e⇒e⇒bool" where
+"distinct x y  ⟷(\<not>(x L= y))"
+   apply(auto)
 
-abbreviation Leibniz_equality :: "e\<Rightarrow>e\<Rightarrow> \<sigma>" (infixr "L=" 52) where
- "x L= y \<equiv> \<^bold>\<forall>(\<lambda>\<phi>. (\<phi> x \<^bold>\<rightarrow> \<phi> y))"
-abbreviation not :: "\<sigma> \<Rightarrow>\<sigma>" ("\<^bold>\<not>") where
- "\<^bold>\<not> \<phi> \<equiv> (\<lambda>w. \<not> \<phi> w)"
+  value"distinct mind body"
 
-definition distinct :: "e\<Rightarrow>e\<Rightarrow>\<sigma>" where
-"distinct x y \<equiv> \<^bold>\<not>(x L= y)"
+theorem MyMindandMyBodyareDistinct:
+  shows"\<not>breakable(mind)\<and>breakable(body)⟹distinct body mind"
 
-theorem MyBodyAndMyMind_are_distinct : "distinct mind body = \<^bold>\<not>(mind L= body)"
-  using mind_constrain body_constrain by blast
   
 end 
