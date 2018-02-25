@@ -31,29 +31,29 @@ consts body :: "e"  --"constant symbol for a physical thing"
 consts mind :: "e"  
 
 
-prop "breakable(body)" --"body can be divided into parts"
+consts whole :: \<sigma>
+axiomatization where body_constrain: "breakable body" --"body is brekable"
+axiomatization where mind_constrain: "\<not>breakable mind" --"mind is not breakable"
+axiomatization where mindnotbody: "whole mind \<and>\<not>whole body"
+abbreviation Leib_eql ::"e⇒e⇒bool"(infix"L="51) where
+"(x L= y) ≡  ∀P. ((P x)⟶(P y))"
 
-prop "¬breakable(mind)  " --"mind can not be divided into parts"
+abbreviation distinct::"e⇒e⇒bool"  where
+"distinct x y ≡ ¬(x L= y)"
 
+theorem MyMindandMyBodyareDistinct:"distinct mind  body"
+proof-
+  from body_constrain mind_constrain have "(breakable body ∧ ¬ breakable mind)" by (rule conjI)
+  from this have " ∃P. (P body ∧ ¬ P mind)" by auto
+  from mindnotbody have "whole mind ∧ ¬ whole body" by blast
+   from this have "∃P. (P mind ∧ ¬ P body)" by auto
+   moreover from this  have "¬(mind L= body)" by auto
+   ultimately show "distinct mind body" by auto
+qed
+  
+  
+ end
 
-axiomatization where mind_constrain : "breakable(mind) = False"
-
-axiomatization where body_constrain: "breakable(body) =True"
-abbreviation imp::"σ\<Rightarrow>σ\<Rightarrow>σ"(infix"⟶"49) where
-"(φ)⟶(ψ) ≡ λe. (φ e ⟶ ψ e)"
-abbreviation forall::"('a⇒σ)⇒σ" ("∀") where
-"∀Φ ≡ λe.∀x. (Φ x e)"
-abbreviation Leib_eql ::"e\<Rightarrow>e\<Rightarrow>bool"(infix"L="51) where
-"x L= y \<equiv>  ∀φ. (φ x)⟶(φ y)"
-
-function distinct ::"e⇒e⇒bool" where
-"distinct x y  ⟷(\<not>(x L= y))"
-   apply(auto)
-
-  value"distinct mind body"
-
-theorem MyMindandMyBodyareDistinct:
-  shows"\<not>breakable(mind)\<and>breakable(body)⟹distinct body mind"
 
   
-end 
+  
