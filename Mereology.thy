@@ -15,25 +15,18 @@ abbreviation overlap :: "μ⇒μ⇒bool" ("O") where
 
 
 axiomatization where axiom_schema:
-"∃x. Φ x ⟶ (∃z. ∀y. ((O y z) ⟷ (φ x ∧ O y x)))"
+"∃x. Φ x ⟶ (∃z. ∀y. ((O y z) ⟷ (Φ x ∧ O y x)))"
 
-axiomatization where sum_axiom :
-"Φ x = (x=a ∨ x=b)"
 
 lemma "∃z. (P x z ∧ P y z)⟶(∃z. ∀w. ((O w x) ∨ (O w y)))"
 proof-
-  from axiom_schema sum_axiom have "∃x.(x=a ∨ x=b)⟶(∃z.∃x. ∀y. ((O y z)⟷((x=a ∨ x=b)∧ O y x)))" by auto
-  have "Φ x = (x=a ∨ x=b)" using sum_axiom by blast
-  hence "∃x. (x=a ∨ x=b)" by auto
-  from this have "(∃z.∃x.∀y.(O y z ⟷ ((x=a ∨ x=b)∧ O y x)))" using  ‹∃x. (x=a ∨ x=b)⟶(∃z.∀y. ((O y z)⟷((x=a ∨ x=b)∧ O y x)))› by auto
-  then have "((x=a ∨ x=b)∧O y x)⟶(O y a ∨ O y b)" by auto
-  moreover  have "(∃z. ∀y. ((O y z)⟷(O a y ∨ O b y)))" by metis
-  ultimately show "∃z. (P x z ∧ P y z)⟶(∃z. ∀w. ((O w x) ∨ (O w y)))" by auto
+  assume "Φ x = (x=a ∨ x=b)"
+  from this have "∃x.(x=a ∨ x=b)⟶(∃z. ∀y. ((O y z) ⟷ ((x=a ∨ x=b) ∧ O y x)))" using axiom_schema by blast
+  then have "∃x.(x=a ∨ x=b)" by auto
+  hence "∃x.(∃z. ∀y.((O y z) ⟷ ((x=a ∨ x=b) ∧ O y x)))" by auto
+  then have "∀y.(∃x.(x=a ∨ x=b) ∧ O y x)⟶(O y a ∨ O y b)" by auto
+  from this have "∀y.(∃z.((O y z)⟷(O a y ∨ O b y)))" by blast
+  hence "∃z. (P x z ∧ P y z)⟶(∃z. ∀w. ((O w x) ∨ (O w y)))" by auto
 qed
 
 end
-
-
-
-
-
