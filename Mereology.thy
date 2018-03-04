@@ -33,8 +33,7 @@ proof-
 qed
 axiomatization where product_axiom :
 "Φ x = (P x a ∧ P x b)"
-axiomatization where proper_part :
-"∀x.∃y.(O x y)⟶P x y"
+
 theorem "∃z.(P x z ∧ P y z)⟶(∃z.(∀w.(P w z ⟷(P w x ∨ P w y))))"
 proof-
   from product_axiom axiom_schema have "∃x.((P x a ∧ P x b)⟶(∀y.(∃z.(O y z) ⟷((P x a ∧ P x b)∧ O y x))))" by blast
