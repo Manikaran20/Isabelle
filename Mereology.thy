@@ -17,6 +17,8 @@ abbreviation overlap :: "μ⇒μ⇒bool" ("O") where
 axiomatization where axiom_schema:
 "∃x. Φ x ⟶ (∃z. ∀y. ((O y z) ⟷ (Φ x ∧ O y x)))"
 
+axiomatization where strong_supplementation:
+"¬P y x ⟶(∃z.(P y z ∧ ¬(O y x)))"
 
 theorem "∃z. (P x z ∧ P y z)⟶(∃z. ∀w. ((O w x) ∨ (O w y)))"
 proof-
@@ -29,13 +31,14 @@ proof-
   show "∃z. (P x z ∧ P y z)⟶(∃z. ∀w. ((O w x) ∨ (O w y)))" by auto
 qed
 
-theorem "∃z.(P z x ∧ P z y)⟶(∃z.(∀w.(P w z ⟷(P w x ∧ P w y))))"
+theorem "(∃z.(P z x ∧ P z y)⟶(∀w.(P w z ⟷(P w x ∧ P w y))))"
 proof-
   have "∃x.(P x a ∧ P x b)⟶(∃z.(∀y.(O y z ⟷((P x a ∧ P x b)∧ O y x))))" using axiom_schema by auto
-  from this have "∃x.∀y.(P x a ∧ P x b)∧(O y x)⟶(∀y.(P y a ∧ P y b))" by simp
-  hence "∃x.(P x a ∧ P x b)⟶(∃z.(∀y.(O y z ⟷(P y a ∧ P y b))))" using P_is_reflexive by blast
+  have "∃x.∀y.(P x a ∧ P x b)∧(O y x)⟶(∀y.(P y a ∧ P y b))" by simp
+  hence "∃x.(P x a ∧ P x b)⟶(∃z.(∀y.(O y z ⟷(P y a ∧ P y b))))" using P_is_reflexive by auto
   have "∀y.∃z.(O y z)⟶P y z" using P_is_reflexive by blast
   hence "∃x.(P x a ∧ P x b)⟶(∃z.(∀y.(P y z ⟷(P y a ∧ P y b))))" by auto
-  thus "∃z.(P z x ∧ P z y)⟶(∃z.(∀w.(P w z ⟷(P w x ∧ P w y))))" by auto
+  thus "(∃z.(P z x ∧ P z y)⟶(∀w.(P w z ⟷(P w x ∧ P w y))))" by auto
 qed
+
 end
