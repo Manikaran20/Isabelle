@@ -17,13 +17,12 @@ abbreviation overlap :: "μ⇒μ⇒bool" ("O") where
 axiomatization where axiom_schema:
 "∃x. Φ x ⟶ (∃z. ∀y. ((O y z) ⟷ (Φ x ∧ O y x)))"
 
-axiomatization where sum_axiom:
- "Φ x = (x=a ∨ x=b)"
+axiomatization where strong_supplementation:
+"¬P y x ⟶(∃z.(P y z ∧ ¬(O y x)))"
 
 theorem "∃z. (P x z ∧ P y z)⟶(∃z. ∀w. ((O w x) ∨ (O w y)))"
 proof-
-  from axiom_schema sum_axiom have "∃x. (x=a ∨ x=b)⟶(∃z. ∀y. ((O y z)⟷((x=a ∨ x=b)∧ O y x)))" by auto
-  from this have "∃x.(x=a ∨ x=b)⟶(∃z. ∀y. ((O y z) ⟷ ((x=a ∨ x=b) ∧ O y x)))" using axiom_schema by blast
+  have "∃x.(x=a ∨ x=b)⟶(∃z. ∀y. ((O y z) ⟷ ((x=a ∨ x=b) ∧ O y x)))" using axiom_schema by blast
   then have "∃x.(x=a ∨ x=b)" by auto
   hence "∃x.(∃z. ∀y.((O y z) ⟷ ((x=a ∨ x=b) ∧ O y x)))" by auto
   then have "∀y.(∃x.(x=a ∨ x=b) ∧ O y x)⟶(O y a ∨ O y b)" by auto
@@ -31,23 +30,15 @@ proof-
   hence "∃z. (P x z ∧ P y z)⟶(∃z. ∀w. ((O w x) ∨ (O w y)))" by auto
   show "∃z. (P x z ∧ P y z)⟶(∃z. ∀w. ((O w x) ∨ (O w y)))" by auto
 qed
-axiomatization where product_axiom :
-"Φ x = (P x a ∧ P x b)"
 
-theorem "∃z.(P x z ∧ P y z)⟶(∃z.(∀w.(P w z ⟷(P w x ∨ P w y))))"
+theorem "(∃z.(P z x ∧ P z y)⟶(∀w.(P w z ⟷(P w x ∧ P w y))))"
 proof-
-  from product_axiom axiom_schema have "∃x.((P x a ∧ P x b)⟶(∀y.(∃z.(O y z) ⟷((P x a ∧ P x b)∧ O y x))))" by blast
-  have "∃x.(P x a ∧ P x b)" using P_is_reflexive product_axiom by blast
-  hence "(∀y.(∃z.(O y z) ⟷(∃x.(P x a ∧ P x b)∧ O y x)))" using product_axiom by blast
-  from this have "∀y.∃z.(P y z)⟷(∃x.(P x a ∧ P x b)∧ O y x)" using P_is_reflexive by blast
-  from this have "∀y.∃z.(P y z)⟷(∃x.(P x a ∧ P x b)∧ P y x)" by meson
-  from this have "∀y.∃z.(P y z)⟷(∃x.(P x a ∧ P y x)∧(P x b ∧ P y x))" by fastforce
-  from this have "∀y.∃z.(P y z)⟷(P y a ∧ P y b)" by auto
-  then have "O a b" using ‹∃x.(P x a ∧ P x b)› by auto
-  from this have "∃z.(P a z ∧ P b z)" using product_axiom by blast
-  hence "∃z.(P a z ∧ P b z)⟶ (∀y.(∃z.(P y z)⟷(P y a ∧ P y b)))" by auto
-  hence "∃z.(P x z ∧ P y z)⟶(∃z.(∀w.(P w z ⟷(P w x ∨ P w y))))" using product_axiom by blast
-  show "∃z.(P x z ∧ P y z)⟶(∃z.(∀w.(P w z ⟷(P w x ∨ P w y))))" using ‹∃z. P x z ∧ P y z ⟶ (∃z. ∀w. P w z = (P w x ∨ P w y))› by blast
+  have "∃x.(P x a ∧ P x b)⟶(∃z.(∀y.(O y z ⟷((P x a ∧ P x b)∧ O y x))))" using axiom_schema by auto
+  have "∃x.∀y.(P x a ∧ P x b)∧(O y x)⟶(∀y.(P y a ∧ P y b))" by simp
+  hence "∃x.(P x a ∧ P x b)⟶(∃z.(∀y.(O y z ⟷(P y a ∧ P y b))))" using P_is_reflexive by auto
+  have "∀y.∃z.(O y z)⟶P y z" using P_is_reflexive by blast
+  hence "∃x.(P x a ∧ P x b)⟶(∃z.(∀y.(P y z ⟷(P y a ∧ P y b))))" by auto 
+  thus "(∃z.(P z x ∧ P z y)⟶(∀w.(P w z ⟷(P w x ∧ P w y))))" by auto
 qed
 
 end
