@@ -37,7 +37,7 @@ proof-
   have "∃x.∀y.(P x a ∧ P x b)∧(O y x)⟶(∀y.(P y a ∧ P y b))" by simp
   hence "∃x.(P x a ∧ P x b)⟶(∃z.(∀y.(O y z ⟷(P y a ∧ P y b))))" using P_is_reflexive by auto
   have "∀y.∃z.(O y z)⟶P y z" using P_is_reflexive by blast
-  hence "∃x.(P x a ∧ P x b)⟶(∃z.(∀y.(P y z ⟷(P y a ∧ P y b))))" by auto
+  hence "∃x.(P x a ∧ P x b)⟶(∃z.(∀y.(P y z ⟷(P y a ∧ P y b))))" by auto 
   thus "(∃z.(P z x ∧ P z y)⟶(∀w.(P w z ⟷(P w x ∧ P w y))))" by auto
 qed
 
