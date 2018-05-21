@@ -107,14 +107,39 @@ text{* Since, MTC' immediately implies that mereological overlap is a form of co
 we tried to prove that, it failed. This led us to define EC(external connection)- connection that
 doesn't share parts which is symmetric but neither reflexive nor transitive *}
 
-definition EC :: "i⇒i⇒bool" ("EC") where--"External connection"
+definition EC :: "i⇒i⇒bool" ("EC")--"External connection"
+  where
 "EC x y ≡ (C x y) ∧ ¬(O x y)"
 
-definition IP :: "i⇒i⇒bool" ("IP") where
+text{* The following definitions are implied on the basis of, The types of parts any individual can 
+consist of regarding connectedness *}
+
+definition IP :: "i⇒i⇒bool" ("IP")--"Internel connectedness- It implies to those parts which
+also share the relations and also are the connected parts"
+  where
 "IP x y ≡ P x y ∧ (∀z.(C z x)⟶(O z y))"
-definition TP :: "i⇒i⇒bool" ("TP") where
+
+definition TP :: "i⇒i⇒bool" ("TP")--"Tangential part"
+  where
 "TP x y ≡ P x y ∧ ¬(IP x y)"
-definition IO :: "i⇒i⇒bool" ("IO") where
+
+definition IO :: "i⇒i⇒bool" ("IO")--"Internal overlap"
+  where
 "IO x y ≡ ∃z.(IP z x ∧ IP z y)"
-definition TO :: "i⇒i⇒bool" ("TO") where
+
+definition TO :: "i⇒i⇒bool" ("TO")--"Tangential overlap"
+  where
 "TO x y ≡ O x y ∧ ¬(IO x y)"
+
+definition IU :: "i⇒i⇒ bool" ("IU")--"Internal underlap"
+  where
+"IU x y ≡ ∃z.(IP x z ∧ IP y z)"
+
+definition TU :: "i⇒i⇒bool" ("TU")--"Tangentially underlap"
+  where
+"TU x y ≡ U x y ∧ ¬(IU x y)"
+
+
+
+
+
