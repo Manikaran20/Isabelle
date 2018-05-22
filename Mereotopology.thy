@@ -139,6 +139,23 @@ definition TU :: "i⇒i⇒bool" ("TU")--"Tangentially underlap"
   where
 "TU x y ≡ U x y ∧ ¬(IU x y)"
 
+text{* More generally, For each mereological predicate "φ" we can define corresponding
+ mereotopological predicates replacing "Iφ" and "Tφ" by substituting IP and TP (respectively)
+for each occurrence of 'P' in the definies.@{cite "casati_parts_1999" } P-55,4.2.for example.. *}
+
+definition IPP :: "i\<Rightarrow>i\<Rightarrow>bool" ("IPP")--"internal proper part"
+  where
+"IPP x y ≡ IP x y ∧ ¬(IP y x)"
+
+definition TPP :: "i\<Rightarrow>i\<Rightarrow>bool" ("TPP")--"tangential proper part"
+  where
+"TPP x y ≡ TP x y ∧ ¬( TP y x)"
+
+text{* just like that all the predicates, defined in the mereology subsection, can be converted to 
+mereotopological predicates *}
+
+
+
 
 
 
