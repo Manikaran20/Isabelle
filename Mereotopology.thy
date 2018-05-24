@@ -92,7 +92,30 @@ text{* just like that all the predicates, defined in the mereology subsection, c
 mereotopological predicates *}
 *)
 
+text{* As we go through the theory of mereotopology,concept of self connectedness begins to rise; A
+cat's tail is connected to the rest of it's body-there is nothing separating them. And surely
+the two don't overlap-there are no common parts. *}
+
+text{* Below we define the predicate for self connectedness that makes the difference between solod
+wholes (such as table or a cup) and scattered wholes (such as bikini or a broken glass; to define self
+connectedness we say that x is self connected if any two parts that make the whole of x are 
+connected to each other: *}
+
+definition SC :: "i⇒bool" ("SC")--"Self-connectedness"
+  where
+"SC x ≡ ∀y.∀z.(∀w.(O w x ⟷ O w y ∨ O w z)⟶C y z)"
 
 
+lemma (in MT) "P x y ⟶ C x y"
+  using MTC' R by blast
 
+lemma (in MT) "(P x y)⟶ (∀z.(C x z ⟶ C z y))"
+  using MT.MTC' MT_axioms by blast
 
+end 
+
+locale CMT= CM + T + 
+  assumes "C x y ⟶ U x y"
+lemma (in CMT) "C x y ⟶ U x y"
+  using CMT.axioms(3) CMT_axioms CMT_axioms_def by auto
+  
