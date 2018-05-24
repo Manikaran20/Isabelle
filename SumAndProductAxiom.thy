@@ -1,4 +1,4 @@
-theory Mereology
+theory SumAndProductAxiom
 imports Main
 begin
 typedecl μ 
