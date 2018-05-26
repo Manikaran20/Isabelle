@@ -116,6 +116,54 @@ end
 
 locale CMT= CM + T + 
   assumes "C x y ⟶ U x y"
+
+begin
+
+definition SC :: "i⇒bool" ("SC") where
+"SC x ≡ ∀y.∀z.(∀w.(O w x ⟷ (O w y ∨ O w z))⟶C y z)"
+
 lemma (in CMT) "C x y ⟶ U x y"
   using CMT.axioms(3) CMT_axioms CMT_axioms_def by auto
+lemma (in CMT) SCC: "(C x y ∧ SC x ∧ SC y) ⟶ (∃z.(SC z ∧ (∀w.(O w z ⟷ O w x ∨ O w y))))"
+proof-
+  fix x y
+  assume "(SC x ∧ SC y)∧(C x y)"
+
+  have "∃p.∃q.∃r.∃s.(P p x ∧ P q x ∧ P r y ∧ P s y)∧ (∀w.(O w x ∧ O w y)⟷ (O w p ∨ O w q)∧(O w r ∨ O w s))"
+    using M.R M_axioms by blast
+  have "C x y"
+    using ‹(SC x ∧ SC y) ∧ C x y› by blast
+  have  "∀w.(∃p.∃q.∃r.∃s.((O w p ∨ O w q)∧(O w r ∨ O w s)))"
+    using  CM.axioms(1) CM_axioms M.R O_def by blast
+  have "∃p.∃q.∃r.∃s.(C p r ∧ C p s) ∨ (C q r ∨ C q s)"
+    using ‹(SC x ∧ SC y) ∧ C x y› by blast
+  have    "(∀y.∀z.(∀w.(O w x ⟷ O w y ∨ O w z)⟶C y z)) ∧  (∀k.∀q.(∀w.(O w y ⟷ O w k ∨ O w q)⟶C k q))"
+    using CMT.SC_def CMT_axioms ‹(SC x ∧ SC y) ∧ C x y› by auto
+  have "∃z.∀w.∃p.∃r.∃q.∃s.(C z p ∨ C z q)∧(C z r ∨ C z s)"
+    using ‹(SC x ∧ SC y) ∧ C x y› by blast
+  have "∃z.(SC z)"
+    using ‹(SC x ∧ SC y) ∧ C x y› by blast
+  have "∃z.(SC z ∧ C z x ∧ C z y)" 
+    using R ‹(SC x ∧ SC y) ∧ C x y› by blast
+ have "∃p.∃r.∃q.∃s.∃z.(P p x ∧ P q x ∧ P r y ∧ P s y)∧((C z p ∨ C z q)∧(C z r ∨ C z s))∧ SC z⟶(((∀w.(O w z ⟷ O w x ∨ O w y))))"
+   using AS by blast
+  have "∃p.∃r.∃q.∃s.∃z.(P p x ∧ P q x ∧ P r y ∧ P s y)∧((C z p ∨ C z q)∧(C z r ∨ C z s))∧ SC z"
+    using M.R M_axioms R ‹(SC x ∧ SC y) ∧ C x y› by blast
+  have "∃z.(∀w.(O w z ⟷ O w x ∨ O w y))"
+    using CMT.axioms(3) CMT_axioms CMT_axioms_def SC ‹(SC x ∧ SC y) ∧ C x y› by auto
+  have " (∃z.(SC z ∧ (∀w.(O w z ⟷ O w x ∨ O w y))))"
+    by (metis SC_def ‹(∀y z w. O w x = (O w y ∨ O w z) ⟶ C y z) ∧ (∀k q w. O w y = (O w k ∨ O w q) ⟶ C k q)› ‹∃z. ∀w. O w z = (O w x ∨ O w y)›)
+  hence  "(C x y ∧ SC x ∧ SC y) ⟶ (∃z.(SC z ∧ (∀w.(O w z ⟷ O w x ∨ O w y))))"
+    by blast
   
+qed
+
+ 
+ 
+
+
+
+     
+
+
+
