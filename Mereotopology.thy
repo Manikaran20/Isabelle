@@ -114,16 +114,13 @@ lemma (in MT) "(P x y)⟶ (∀z.(C x z ⟶ C z y))"
 
 end 
 
-locale CMT= CM + T + 
-  assumes "C x y ⟶ U x y"
+locale CMT= CM + T 
 
 begin
 
 definition SC :: "i⇒bool" ("SC") where
 "SC x ≡ ∀y.∀z.(∀w.(O w x ⟷ (O w y ∨ O w z))⟶C y z)"
 
-lemma (in CMT) "C x y ⟶ U x y"
-  using CMT.axioms(3) CMT_axioms CMT_axioms_def by auto
 lemma (in CMT) SCC: "(C x y ∧ SC x ∧ SC y) ⟶ (∃z.(SC z ∧ (∀w.(O w z ⟷ O w x ∨ O w y))))"
 proof
   assume "C x y ∧ SC x ∧ SC y"
@@ -158,11 +155,25 @@ proof
   thus "(∃z.(SC z ∧ (∀w.(O w z ⟷ O w x ∨ O w y))))" 
     by blast
 qed
+
+end
+
+locale CEMT = CEM + T 
+begin
+definition SC :: "i⇒bool" ("SC") where
+"SC x ≡ ∀y.∀z.(x = y ❙+ z ⟶ C y z)"
+
+lemma (in CEMT) "C x y ∧ SC x ∧ SC y ⟶ SC (x❙+y)"nitpick oops
+
+end
+locale GEMT = GEM + T
+
+begin
+lemma (in GEMT) "C x y ⟶ U x y" 
+  using EU by blast
+
   
 
-
- 
- 
 
 
 
