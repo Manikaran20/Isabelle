@@ -114,7 +114,8 @@ lemma (in MT) "(P x y)⟶ (∀z.(C x z ⟶ C z y))"
 
 end 
 
-locale CMT= CM + T 
+locale CMT= CM + T +
+  assumes "C x y ⟶ U x y "
 
 begin
 
@@ -123,22 +124,25 @@ definition SC :: "i⇒bool" ("SC") where
 
 lemma (in CMT) SCC: "(C x y ∧ SC x ∧ SC y) ⟶ (∃z.(SC z ∧ (∀w.(O w z ⟷ O w x ∨ O w y))))"
 proof
+  fix p q r s 
   assume "C x y ∧ SC x ∧ SC y"
-  hence "∃p.∃q.∃r.∃s.(P p x ∧ P q x ∧ P r y ∧ P s y)∧ (∀w.(O w x ∧ O w y)⟷ (O w p ∨ O w q)∧(O w r ∨ O w s))"
-    using M.R M_axioms by blast
+  hence "∀w.(O w x ⟷ O w p ∨ O w q)⟶C p q"
+    using SC_def by blast
+  hence "∀w.(O w y ⟷ O w r ∨ O w s) ⟶ C r s"
+    using CMT.SC_def CMT_axioms ‹C x y ∧ SC x ∧ SC y› by auto
     hence "∀w.(∃p.∃q.∃r.∃s.(O w p ∨ O w q)∧(O w r ∨ O w s))"
-    using  CM.axioms(1) CM_axioms M.R O_def by blast
-  hence "∃p.∃q.∃r.∃s.(C p r ∧ C p s) ∨ (C q r ∨ C q s)"
-    using R by blast
+      using  CM.axioms(1) CM_axioms M.R O_def by blast
+    hence "∀w.(∃p.∃q.∃r.∃s.( C p q ∧ C r s))"
+      using ‹C x y ∧ SC x ∧ SC y› by blast
   hence    "((∀w.(O w x ⟷ O w p ∨ O w q)⟶C p q)) ∧  ((∀w.(O w y ⟷ O w r ∨ O w s)⟶C r s))"
     using CMT.SC_def CMT_axioms ‹C x y ∧ SC x ∧ SC y› by auto
-  hence "∃z.∀w.∃p.∃q.∃r.∃s.(C z p ∨ C z q)∧(C z r ∨ C z s)"
-    using R by auto
+  hence "∃z.∀w.(C z p ∨ C z q)∧(C z r ∨ C z s)"
+    by (metis O_def SC_def ‹C x y ∧ SC x ∧ SC y›)
   hence "∃z.(SC z)"
     using ‹C x y ∧ SC x ∧ SC y› by auto
   hence "∃z.(SC z ∧ C z x ∧ C z y)" 
       using R ‹C x y ∧ SC x ∧ SC y› by blast
-    hence "∃p.∃r.∃q.∃s.∃z.(P p x ∧ P q x ∧ P r y ∧ P s y)∧((C z p ∨ C z q)∧(C z r ∨ C z s))∧ SC z⟶(((∀w.(O w z ⟷ O w x ∨ O w y))))"
+    hence "∃z.∃p.∃r.∃q.∃s.(P p x ∧ P q x ∧ P r y ∧ P s y)∧((C z p ∨ C z q)∧(C z r ∨ C z s))∧ SC z⟶(((∀w.(O w z ⟷ O w x ∨ O w y))))"
    using AS by blast
   hence "∃p.∃r.∃q.∃s.∃z.(P p x ∧ P q x ∧ P r y ∧ P s y)∧((C z p ∨ C z q)∧(C z r ∨ C z s))∧ SC z"
     using M.R M_axioms R ‹C x y ∧ SC x ∧ SC y› by blast
@@ -166,18 +170,17 @@ definition SC :: "i⇒bool" ("SC") where
 lemma (in CEMT) "C x y ∧ SC x ∧ SC y ⟶ SC (x❙+y)"nitpick oops
 
 end
-locale GEMT = GEM + T
+
+locale GEMT = GEM +MT
 
 begin
 lemma (in GEMT) "C x y ⟶ U x y" 
   using EU by blast
 
-  
+definition ix :: "(i⇒i⇒bool)⇒i" ("❙Φ")--"integrated sum operator"
+  where
+"❙Φ F ≡ THE z. (∀y. O y z ⟷(∃x. F z x ∧ O x y))"
 
-
-
-
-     
-
-
-
+definition i :: "(i⇒i⇒bool)⇒i" ("❙i")
+  where
+"❙i x ≡ ❙Φ IP "
