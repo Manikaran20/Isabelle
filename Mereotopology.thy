@@ -12,18 +12,17 @@ reflexive and symmetric both but not transitive" @{cite "casati_parts_1999"} *}
 
 locale C =
   fixes C :: "i⇒i⇒bool" ("C")--"Connectedness"
+ assumes R: "C x x" -- "reflexivity of connectedness "
+ and S: "C x y ⟶ C y x" -- "symmetry of connectedness"
 
+
+locale T = C  
 begin
 
 definition E :: "i⇒i⇒bool" ("E")--"Enclosed- since relations are shared with parts, It is assumed 
 to be enclosed in it"
   where "E x y ≡ ∀z.(C z x ⟶ C z y)"
-
 end
-
-locale T = C + assumes R: "C x x" -- "reflexivity of connectedness "
-               and S: "C x y ⟶ C y x" -- "symmetry of connectedness"
-
 
 lemma (in T) "E x x" 
   by (simp add: E_def)
@@ -36,9 +35,9 @@ lemma (in T) "((E x Y) ∧ (E y x))⟶(x=y)" nitpick oops
 
 locale MT = M + T +
   assumes MTC : "(P x y) ⟶ (E x y)" --" Monotonicity "
-  and MTC' :"(P x y)⟶ (∀z.(C x z ⟶ C z y))"
 
 begin
+ 
 text{* Since, MTC' immediately implies that mereological overlap is a form of connection. but, when 
 we tried to prove that, it failed. This led us to define EC(external connection)- connection that
 doesn't share parts which is symmetric but neither reflexive nor transitive *}
@@ -104,23 +103,20 @@ connected to each other: *}
 definition SC :: "i⇒bool" ("SC")--"Self-connectedness"
   where
 "SC x ≡ ∀y.∀z.(∀w.(O w x ⟷ O w y ∨ O w z)⟶C y z)"
-
-
-lemma (in MT) "P x y ⟶ C x y"
-  using MTC' R by blast
-
+  
 lemma (in MT) "(P x y)⟶ (∀z.(C x z ⟶ C z y))"
-  using MT.MTC' MT_axioms by blast
+ using E_def MTC S by blast
+
+lemma (in MT) "O x y ⟶ C x y"
+  using E_def MTC O_def R S by blast
+
 
 end 
 
-locale CMT= CM + T +
+locale CMT= CM + MT +
   assumes "C x y ⟶ U x y "
 
 begin
-
-definition SC :: "i⇒bool" ("SC") where
-"SC x ≡ ∀y.∀z.(∀w.(O w x ⟷ (O w y ∨ O w z))⟶C y z)"
 
 lemma (in CMT) SCC: "(C x y ∧ SC x ∧ SC y) ⟶ (∃z.(SC z ∧ (∀w.(O w z ⟷ O w x ∨ O w y))))"
 proof
@@ -129,13 +125,13 @@ proof
   hence "∀w.(O w x ⟷ O w p ∨ O w q)⟶C p q"
     using SC_def by blast
   hence "∀w.(O w y ⟷ O w r ∨ O w s) ⟶ C r s"
-    using CMT.SC_def CMT_axioms ‹C x y ∧ SC x ∧ SC y› by auto
+    using SC_def ‹C x y ∧ SC x ∧ SC y› by auto
     hence "∀w.(∃p.∃q.∃r.∃s.(O w p ∨ O w q)∧(O w r ∨ O w s))"
       using  CM.axioms(1) CM_axioms M.R O_def by blast
     hence "∀w.(∃p.∃q.∃r.∃s.( C p q ∧ C r s))"
       using ‹C x y ∧ SC x ∧ SC y› by blast
   hence    "((∀w.(O w x ⟷ O w p ∨ O w q)⟶C p q)) ∧  ((∀w.(O w y ⟷ O w r ∨ O w s)⟶C r s))"
-    using CMT.SC_def CMT_axioms ‹C x y ∧ SC x ∧ SC y› by auto
+    using ‹∀w. O w x = (O w p ∨ O w q) ⟶ C p q› ‹∀w. O w y = (O w r ∨ O w s) ⟶ C r s› by blast
   hence "∃z.∀w.(C z p ∨ C z q)∧(C z r ∨ C z s)"
     by (metis O_def SC_def ‹C x y ∧ SC x ∧ SC y›)
   hence "∃z.(SC z)"
@@ -163,7 +159,9 @@ qed
 end
 
 locale CEMT = CEM + T 
+
 begin
+
 definition SC :: "i⇒bool" ("SC") where
 "SC x ≡ ∀y.∀z.(x = y ❙+ z ⟶ C y z)"
 
@@ -177,10 +175,53 @@ begin
 lemma (in GEMT) "C x y ⟶ U x y" 
   using EU by blast
 
-definition ix :: "(i⇒i⇒bool)⇒i" ("❙Φ")--"integrated sum operator"
+definition i :: "(i⇒i)" ("❙i")--"interior"
   where
-"❙Φ F ≡ THE z. (∀y. O y z ⟷(∃x. F z x ∧ O x y))"
+"❙i x ≡ σ z. (IP z x)"
 
-definition i :: "(i⇒i⇒bool)⇒i" ("❙i")
+definition e :: "(i⇒i)" ("❙e")--"exterior"
   where
-"❙i x ≡ ❙Φ IP "
+"❙e x ≡ ❙i (❙¬ x)"
+
+definition c :: "i⇒i" ("❙c")--"closure"
+  where
+"❙c x ≡ ❙¬ (❙e x)"
+
+definition b :: "i⇒i" ("❙b")--"boundary"
+  where
+"❙b x ≡ ❙¬ (❙i x ❙+ ❙e x)"
+
+end
+text{* Note that all the integrated operators in GEMT(GEM+MT) are distinguished by bold font *}
+
+text{* These integrated operators are partially defined, unless we assume the existence of a null 
+individual that is part of everything *}
+
+text{* Even so,in GEMT these operators are rather well-behaved. *}
+
+text{* In particular, we can get closer to standard topological theories by supplementing the axiom
+of symmetry and reflexivity and the monotonicity axiom of connectedness, with the mereologized 
+analogues of the standard kuratowski (1922) axioms for topological closure@{cite "casati_parts_1999"}
+, P.59 .*}
+
+text {* Equivalently, we could use the axioms for the interior operator @{cite "casati_parts_1999"}
+p.59, . *}
+
+locale GEMTC = GEMT + 
+  assumes Inclusion : "P (❙i x) x" 
+and Idempotence : "❙i (❙i x) = ❙i x"
+and Product : "❙i (x ❙× y) = ❙i x ❙× ❙i y"
+
+lemma (in GEMTC) "C x y ⟷ O x y ∨ O x (❙c y) ∨ O (❙c x) y" nitpick oops
+
+
+
+ 
+
+
+
+
+     
+
+
+
