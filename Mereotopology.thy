@@ -86,7 +86,6 @@ definition IPP :: "i⇒i⇒bool" ("IPP")--"internal proper part"
 definition TPP :: "i⇒i⇒bool" ("TPP")--"tangential proper part"
   where
 "TPP x y ≡ TP x y ∧ ¬( TP y x)"
-
 text{* just like that all the predicates, defined in the mereology subsection, can be converted to 
 mereotopological predicates *}
 *)
@@ -211,17 +210,49 @@ locale GEMTC = GEMT +
   assumes Inclusion : "P (❙i x) x" 
 and Idempotence : "❙i (❙i x) = ❙i x"
 and Product : "❙i (x ❙× y) = ❙i x ❙× ❙i y"
-
-lemma (in GEMTC) "C x y ⟷ O x y ∨ O x (❙c y) ∨ O (❙c x) y" nitpick oops
-
+and "P x (❙c x) "
+and "❙c (❙c x) = ❙c x "
+and "❙c (x ❙+ y) = ❙c x ❙+ ❙c y"
+and "❙b x = ❙b (❙¬x)"
+and "❙b (❙b x) = ❙b x"
+and "❙b (x ❙× y) ❙+ ❙b (x ❙+ y) = ❙b x ❙+ ❙b y"
+lemma (in GEMTC) "C x y ⟷ O x (❙c y) ∨ O (❙c x) y"
+proof
+  assume "C x y"
+  hence "U x y"
+    by (simp add: EU)
+  hence "P (❙i x) (❙c x) "
+    by (metis GEMTC.axioms(2) GEMTC_axioms GEMTC_axioms_def M.T M_axioms)
+  hence "C (❙i x) (❙c x)"
+    using E_def MTC R by blast
+  hence "U (❙i x) (❙c x)" 
+    by (simp add: EU)
+  hence "P (❙i x) x ∧ C x y"
+    using Inclusion ‹C x y› by blast
+  hence "C (❙c x) y"
+    by (metis E_def GEMTC.axioms(2) GEMTC_axioms GEMTC_axioms_def MTC S)
+  hence "C (❙c y) x " 
+    by (metis (no_types, hide_lams) E_def GEMTC.axioms(2) GEMTC_axioms GEMTC_axioms_def MTC S ‹❙i x ❙≤ x ∧ C x y›)
+  hence "C (❙¬(❙e y) ) x ∧ C y (❙¬(e y) )"
+    by (metis C.R C_axioms E_def GEMTC.axioms(2) GEMTC_axioms GEMTC_axioms_def MTC c_def)
+  hence "C (❙¬(❙i (❙¬y) ) ) x  ∧  C y (❙¬(❙i (❙¬ x) ) ) "
+    using GEMT.c_def GEMT.e_def GEMT_axioms S ‹C (❙c x) y› by auto
+  hence "P (σ z .(IP z x)) (❙c x)"
+    using ‹❙i x ❙≤ ❙c x› i_def by auto
+  hence "P z (❙i x) ⟶ O z x"
+proof -
+have "∀p i. ¬ Mereology.M p ∨ p i i"
+using M.R by presburger
+then have "z ❙≤ z"
+by (meson M_axioms)
+then show ?thesis
+using M.T M_axioms O_def ‹❙i x ❙≤ x ∧ C x y› by blast
+qed
+  hence "O (❙c x) x"
+    using O_def ‹❙i x ❙≤ ❙c x› ‹❙i x ❙≤ x ∧ C x y› by blast
 
 
  
-
-
-
-
-     
 
 
 
